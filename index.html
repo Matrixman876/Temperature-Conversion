@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Temperature Converter</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #077aee;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #ea0b0b;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        label, select, input {
+            display: block;
+            width: 100%;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #0077cc;
+            color: #900b0b;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #a38200;
+        }
+        #result, #error {
+            margin-top: 15px;
+            font-weight: bold;
+            text-align: center;
+        }
+        #error {
+            color: red;
+        }
+        #result {
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Lämpötilamuunnin</h1>
+        <label for="temperature">Anna lämpötila:</label>
+        <input type="text" id="temperature" placeholder="Esim. 25">
+
+        <label for="conversion">Valitse muunnos:</label>
+        <select id="conversion">
+            <option value="cToF">Celsius -> Fahrenheit</option>
+            <option value="fToC">Fahrenheit -> Celsius</option>
+        </select>
+
+        <button onclick="convertTemperature()">Muunna</button>
+
+        <div id="error"></div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function convertTemperature() {
+            const tempInput = document.getElementById("temperature").value.trim();
+            const conversionType = document.getElementById("conversion").value;
+            const errorDiv = document.getElementById("error");
+            const resultDiv = document.getElementById("result");
+
+            errorDiv.textContent = "";
+            resultDiv.textContent = "";
+
+            if (tempInput === "") {
+                errorDiv.textContent = "Virhe: Anna lämpötila-arvo!";
+                return;
+            }
+
+            const temperature = parseFloat(tempInput);
+
+            if (isNaN(temperature)) {
+                errorDiv.textContent = "Virhe: Lämpötilan täytyy olla numeerinen arvo!";
+                return;
+            }
+
+            if (conversionType === "cToF") {
+                if (temperature < -273.15) {
+                    errorDiv.textContent = "Virhe: Lämpötila ei voi olla alle absoluuttisen nollapisteen (-273.15 °C)!";
+                    return;
+                }
+                const result = (temperature * 9/5) + 32;
+                resultDiv.textContent = `${temperature} °C = ${result.toFixed(2)} °F`;
+            } else {
+                const celsius = (temperature - 32) * 5/9;
+                if (celsius < -273.15) {
+                    errorDiv.textContent = "Virhe: Tuloksena oleva lämpötila ei voi olla alle absoluuttisen nollapisteen (-273.15 °C)!";
+                    return;
+                }
+                resultDiv.textContent = `${temperature} °F = ${celsius.toFixed(2)} °C`;
+            }
+        }
+    </script>
+</body>
+</html>
